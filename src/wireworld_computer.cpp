@@ -27,6 +27,11 @@
 #include "not_register.h"
 
 #include <iostream>
+#ifndef WIN32
+#include <unistd.h>
+#else
+#include <windows.h>
+#endif
 using namespace std;
 
 wireworld_computer::wireworld_computer(void)
