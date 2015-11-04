@@ -15,26 +15,20 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
-#ifndef __WIREWORLD_COMPUTER_H__
-#define __WIREWORLD_COMPUTER_H__
+#ifndef __REGISTER_IF_H__
+#define __REGISTER_IF_H__
 
-#include "register_if.h"
+#include <cstdint>
 
 namespace wireworld_computer
 {
-  class wireworld_computer
+  class register_if
   {
   public:
-    wireworld_computer(void);
-    void run(void);
-  private:
-    uint8_t decodeDestination(uint16_t p_instr);
-    uint8_t decodeSource(uint16_t p_instr);
-    uint16_t getInstruction(void);
-    void execInstruction(uint16_t p_instr);
-    register_if* m_registers[64];
+    virtual uint16_t read(void)const=0;
+    virtual void write(uint16_t p_value)=0;
+    virtual ~register_if(void){};
   };
-
 }
-#endif //__WIREWORLD_COMPUTER_H__
+#endif //__REGISTER_IF_H__
 //EOF

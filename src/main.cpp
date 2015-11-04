@@ -17,14 +17,14 @@
 */
 #include "wireworld_computer.h"
 
-#include <stdlib.h>
+#include <cstdlib>
 #include <iostream>
 
 using namespace std;
 
 int main(void)
 {
-  wireworld_computer l_computer;
+  wireworld_computer::wireworld_computer l_computer;
   l_computer.run();
-  exit(-1);
+  return 0;
 }
