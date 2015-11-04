@@ -62,47 +62,136 @@ namespace wireworld_computer
     m_registers[62] = new not_register();
     m_registers[63] = new simple_register();
 
-#ifdef TOTO
-  // Initialising register values
-  m_registers[1]->write(0x1E);
-  m_registers[2]->write(0x361F);
-  m_registers[3]->write(0x2021);
-  m_registers[4]->write(0x3C22);
-  m_registers[5]->write(0x3D23);
-  m_registers[6]->write(0x3C3D);
-  m_registers[7]->write(0x3D20);
-  m_registers[8]->write(0x3924);
-  m_registers[9]->write(0x3725);
-  m_registers[10]->write(0x383D);
-  m_registers[11]->write(0x3F38);
-  m_registers[12]->write(0x3D3D);
-  m_registers[13]->write(0x3D3D);
-  m_registers[14]->write(0x353D);
-  m_registers[15]->write(0x3926);
-  m_registers[16]->write(0x3727);
-  m_registers[17]->write(0x3836);
-  m_registers[18]->write(0x3F38);
-  m_registers[19]->write(0x3928);
-  m_registers[20]->write(0x0020);
-  m_registers[21]->write(0x3D20);
-  m_registers[22]->write(0x3C1E);
-  m_registers[23]->write(0x3F29);
-  m_registers[24]->write(0x203D);
-  m_registers[30]->write(0x2);
-  m_registers[31]->write(0x7FFF);
-  m_registers[32]->write(0x0005);
-  m_registers[33]->write(0x0003);
-  m_registers[34]->write(0xFFFE);
-  m_registers[35]->write(0xFFFD);
-  m_registers[36]->write(0x0014);
-  m_registers[37]->write(0x000D);
-  m_registers[38]->write(0x0009);
-  m_registers[39]->write(0x0005);
-  m_registers[40]->write(0x0015);
-  m_registers[41]->write(0x0004);
-  m_registers[42]->write(0xFFFC);
-  m_registers[63]->write(1);
-#endif
+#ifdef ORIGINAL_CODE
+    // Initialising register values
+    // 1  001e  MOV R0 ,R30  ; set display to 2
+    m_registers[1]->write(0x001E);
+
+    // 2  361f  MOV R54,R31  ; initialise mask register for sign bit test
+    m_registers[2]->write(0x361F);
+
+    // 3  2021  MOV R32,R33  ; set candidate prime p=3
+    m_registers[3]->write(0x2021);
+
+    // 4  3c22  MOV R60,R34  ; the trial divisor q is stored in the adder as its
+    //                       ; negative: here it is initialised to -1, i.e. q=1
+    m_registers[4]->write(0x3C22);
+
+    // 5  3d23  MOV R61,R35  ; other summand=-2
+    m_registers[5]->write(0x3D23);
+
+    // 6  3c3d  MOV R60,R61  ; next trial divisor q=q+2
+    m_registers[6]->write(0x3C3D);
+
+    // 7  3d20  MOV R61,R32  ; move p to adder summand input a, which holds remainder
+    m_registers[7]->write(0x3D20);
+
+    // 8  3924  MOV R57,R36  ; for the first time round the loop, set the target
+    //                       ; for the branch if subtraction gives zero to 20: this
+    //                       ; detects the case p==q, which means we have done all
+    //                       ; the trial divisors and p is prime
+    m_registers[8]->write(0x3924);
+
+    // 9  3725  MOV R55,R37  ; if subtraction result non-zero, target is 13
+    m_registers[9]->write(0x3725);
+
+    //10  383d  MOV R56,R61  ; test a-q
+    m_registers[10]->write(0x383D);
+
+    //11  3f38  MOV R63,R56  ; branch to selected target
+    m_registers[11]->write(0x3F38);
+
+    //12  3d3d  MOV R61,R61  ; a-=q
+    m_registers[12]->write(0x3D3D);
+
+    //13  3d3d  MOV R61,R61  ; a-=q (continuing here if subtraction result not zero)
+    m_registers[13]->write(0x3D3D);
+
+    //14  353d  MOV R53,R61  ; move a-q to and-not register to check sign
+    m_registers[14]->write(0x353D);
+
+    //15  3926  MOV R57,R38  ; target is 9 if a-q positive (round subtraction loop
+    //                       ; again)
+    m_registers[15]->write(0x3926);
+
+    //16  3727  MOV R55,R39  ; else target is 5 (q does not divide p, so try next q)
+    m_registers[16]->write(0x3727);
+
+    //17  3836  MOV R56,R54  ; test a-q AND 0x8000
+    m_registers[17]->write(0x3836);
+
+    //18  3f38  MOV R63,R56  ; branch to selected target
+    m_registers[18]->write(0x3F38);
+
+    //19  3928  MOV R57,R40  ; reset target for other branch to 21 (a zero result
+    //                       ; from the subtraction now indicates q properly
+    //                       ; divides p and so p is composite)
+    m_registers[19]->write(0x3928);
+
+    //20  0020  MOV R0 ,R32  ; p is prime: write it to the display
+    m_registers[20]->write(0x0020);
+
+    //21  3d20  MOV R61,R32  ; move p to adder
+    m_registers[21]->write(0x3D20);
+
+    //22  3c1e  MOV R60,R30  ; other summand=2
+    m_registers[22]->write(0x3C1E);
+
+    //23  3f29  MOV R63,R41  ; goto 4 to try new p
+    m_registers[23]->write(0x3F29);
+
+    //24  203d  MOV R32,R61  ; p+=2
+    m_registers[24]->write(0x203D);
+
+    //25                     ; unused
+    //26                     ; unused
+    //27                     ; unused
+    //28                     ; unused
+    //29                     ; unused
+
+    //30  0002               ; constant 2
+    m_registers[30]->write(0x2);
+
+    //31  7fff               ; constant mask for sign bit testing
+    m_registers[31]->write(0x7FFF);
+
+    //32  0005               ; current candidate p
+    m_registers[32]->write(0x0005);
+
+    //33  0003               ; constant 3
+    m_registers[33]->write(0x0003);
+
+    //34  fffe               ; constant -1
+    m_registers[34]->write(0xFFFE);
+
+    //35  fffd               ; constant -2
+    m_registers[35]->write(0xFFFD);
+
+    //36  0014  20           ; branch target: trial divisor q equal to candidate p,
+    //                       ; and hence prime found
+    m_registers[36]->write(0x0014);
+
+    //37  000d  13           ; branch target: trial divisor q less than candidate p
+    m_registers[37]->write(0x000D);
+
+    //38  0009   9           ; branch target: more subtractions to do
+    m_registers[38]->write(0x0009);
+
+    //39  0005   5           ; branch target: next trial divisor q
+    m_registers[39]->write(0x0005);
+
+    //40  0015  21           ; branch target: subtraction gave zero, so p composite
+    m_registers[40]->write(0x0015);
+
+    //41  0004   4           ; branch target: next candidate p
+    m_registers[41]->write(0x0004);
+
+    //42  fffc               ; constant -3  m_registers[1]->write(0x1E);
+    m_registers[42]->write(0xFFFC);
+
+    // Define start of software
+    m_registers[63]->write(1);
+#else // MY SIMPLE LOOP CODE
     m_registers[63]->write(1);
     // Initialisation running variable to 0
     m_registers[41]->write(0);
@@ -145,7 +234,7 @@ namespace wireworld_computer
     m_registers[12]->write(0x3F2C);
     // End of loop
     m_registers[13]->write(0x002E);
-  
+#endif // ORIGINAL_CODE
   }
 
   //----------------------------------------------------------------------------
