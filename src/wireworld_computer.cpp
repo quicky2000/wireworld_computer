@@ -159,20 +159,20 @@ uint16_t wireworld_computer::getInstruction(void)
 {
   cout << "PC value :" ;
   uint16_t l_pc = m_registers[63]->read();
-  cout << "=> PC = " << hex << l_pc << dec << endl ;
+  cout << "=> PC = 0x" << hex << l_pc << dec << endl ;
   m_registers[63]->write(l_pc+1);
   return m_registers[l_pc]->read();
 }
 
 void wireworld_computer::execInstruction(uint16_t p_instr)
 {
-  cout << "=> Instruction = " << hex << p_instr << dec << endl ;
+  cout << "=> Instruction = 0x" << hex << p_instr << dec << endl ;
   uint16_t l_destination = decodeDestination(p_instr);
   uint16_t l_source = decodeSource(p_instr);
   cout << "=> MOV R" << l_destination << ", R" << l_source <<  endl ;
   cout << "R" << l_source << " => " ;
   uint16_t l_value = m_registers[l_source]->read();
-  cout << hex << l_value << dec << " => " ;
+  cout << "0x" << hex << l_value << dec << " => " ;
   cout << "R" << l_destination << endl ;
   m_registers[l_destination]->write(l_value);
 }
