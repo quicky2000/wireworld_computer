@@ -19,13 +19,16 @@
 #define __WIREWORLD_COMPUTER_H__
 
 #include "register_if.h"
+#include "register_information.h"
+#include <map>
 
 namespace wireworld_computer
 {
   class wireworld_computer
   {
   public:
-    wireworld_computer(void);
+    typedef std::map<unsigned int,register_information> t_register_informations;
+    wireworld_computer(const t_register_informations & p_informations);
     void run(void);
   private:
     uint8_t decodeDestination(uint16_t p_instr);

@@ -24,7 +24,11 @@ using namespace std;
 
 int main(void)
 {
-  wireworld_computer::wireworld_computer l_computer;
+  typedef wireworld_computer::register_information t_reg_info;
+  typedef wireworld_computer::wireworld_computer::t_register_informations t_reg_infos;
+  t_reg_infos l_register_informations;
+
+  wireworld_computer::wireworld_computer l_computer(l_register_informations);
   l_computer.run();
   return 0;
 }
