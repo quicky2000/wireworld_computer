@@ -25,7 +25,7 @@ using namespace std;
 int main(void)
 {
   typedef wireworld_computer::register_information t_reg_info;
-  typedef wireworld_computer::wireworld_computer::t_register_informations t_reg_infos;
+  typedef wireworld_computer::wireworld_computer_utils::t_register_informations t_reg_infos;
   t_reg_infos l_register_informations;
 
 #define ORIGINAL_CODE

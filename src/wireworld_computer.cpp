@@ -40,7 +40,7 @@ using namespace std;
 namespace wireworld_computer
 {
   //----------------------------------------------------------------------------
-  wireworld_computer::wireworld_computer(const t_register_informations & p_informations)
+  wireworld_computer::wireworld_computer(const wireworld_computer_utils::t_register_informations & p_informations)
   {
 
     //Creating registers
@@ -88,7 +88,7 @@ namespace wireworld_computer
     for(unsigned int l_index=0 ; l_index < 64 ; ++l_index)
       {
 	std::cout << setfill(' ') << setw(2) << l_index << " : ";
-	t_register_informations::const_iterator l_info_iter = p_informations.find(l_index);
+	wireworld_computer_utils::t_register_informations::const_iterator l_info_iter = p_informations.find(l_index);
 	if(p_informations.end() != l_info_iter)
 	  {
 	    if("" != l_info_iter->second.get_label())
