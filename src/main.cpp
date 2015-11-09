@@ -70,7 +70,7 @@ int main(void)
   l_register_informations.insert(t_reg_infos::value_type(41,t_reg_info(false,0x0004,"branch target: next candidate p","Label_41")));
   l_register_informations.insert(t_reg_infos::value_type(42,t_reg_info(false,0xFFFC,"constant -3")));
 
-  l_register_informations.insert(t_reg_infos::value_type(63,t_reg_info(false,1,"Starting PC","<PC>")));
+  l_register_informations.insert(t_reg_infos::value_type(63,t_reg_info(false,1,"Starting PC","PC")));
 
 #else // MY SIMPLE LOOP CODE
   l_register_informations.insert(t_reg_infos::value_type(63,t_reg_info(false,1,"Initial PC","PC")));
