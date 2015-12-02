@@ -31,7 +31,9 @@ int main(int argc,char **argv)
       // Defining application command line parameters
       parameter_manager::parameter_manager l_param_manager("wireworld.exe","--",1);
       parameter_manager::parameter_if l_param_file("program_file");
+      parameter_manager::parameter_if l_param_detailled_display("detailled_display",true);
       l_param_manager.add(l_param_file);
+      l_param_manager.add(l_param_detailled_display);
 
       // Treating parameters
       l_param_manager.treat_parameters(argc,argv);
@@ -41,12 +43,26 @@ int main(int argc,char **argv)
 
       wireworld_computer::program_parser::parse(l_param_file.get_value<std::string>(),l_register_informations);
 
-      wireworld_computer::wireworld_computer l_computer(l_register_informations);
+      std::string l_detailled_display_str = l_param_detailled_display.get_value<std::string>();
+      bool l_detailled_display = false;
+      if(l_param_detailled_display.value_set())
+      {
+        if("yes" == l_detailled_display_str)
+          {
+            l_detailled_display = true;
+          }
+        else if("no" != l_detailled_display_str)
+          {
+            throw quicky_exception::quicky_logic_exception("Bad detailled_display parameter argument \""+l_detailled_display_str+"\" should be yes or no",__LINE__,__FILE__);
+          }
+      }
+
+      wireworld_computer::wireworld_computer l_computer(l_register_informations,l_detailled_display);
       l_computer.run();
     }
   catch(quicky_exception::quicky_logic_exception & e)
     {
-      std::cout << "ERROR : Runtime exception : " << e.what() << std::endl ;
+      std::cout << "ERROR : Logic exception : " << e.what() << std::endl ;
       return -1;
     }
   catch(quicky_exception::quicky_runtime_exception & e)

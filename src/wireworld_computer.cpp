@@ -40,11 +40,11 @@ using namespace std;
 namespace wireworld_computer
 {
   //----------------------------------------------------------------------------
-  wireworld_computer::wireworld_computer(const wireworld_computer_utils::t_register_informations & p_informations)
+  wireworld_computer::wireworld_computer(const wireworld_computer_utils::t_register_informations & p_informations, bool p_detailled_display)
   {
 
     //Creating registers
-    m_registers[0] = new display_register();
+    m_registers[0] = new display_register(p_detailled_display);
     for(uint32_t l_index = 1; l_index <= 52 ; ++l_index)
       {
 	m_registers[l_index] = new simple_register();
