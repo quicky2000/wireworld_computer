@@ -24,6 +24,7 @@
 #include "return_zero_register.h"
 #include "conditional_register.h"
 #include "sum_register.h"
+#include "sum_operand_register.h"
 #include "not_register.h"
 #include "quicky_exception.h"
 
@@ -60,8 +61,11 @@ namespace wireworld_computer
     m_registers[57] = l_reg_57;
     m_registers[58] = new rotate_right_register();
     m_registers[59] = new rotate_left_register();
-    m_registers[60] = new simple_register();
-    m_registers[61] = new sum_register(m_registers[60]);
+    sum_operand_register * l_sum_operand_register = new sum_operand_register();
+    m_registers[60] = l_sum_operand_register;
+    sum_register* l_sum_register = new sum_register(m_registers[60]);
+    m_registers[61] = l_sum_register;
+    l_sum_operand_register->set_sum_register(*l_sum_register);
     m_registers[62] = new not_register();
     m_registers[63] = new simple_register();
 
