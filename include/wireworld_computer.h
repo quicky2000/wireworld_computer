@@ -27,7 +27,9 @@ namespace wireworld_computer
   class wireworld_computer
   {
   public:
-    wireworld_computer(const wireworld_computer_utils::t_register_informations & p_informations, bool p_detailled_display);
+    wireworld_computer(const wireworld_computer_utils::t_register_informations & p_informations,
+		       const std::string & p_output_file,
+		       bool p_detailled_display);
     void run(void);
   private:
     uint8_t decodeDestination(uint16_t p_instr);

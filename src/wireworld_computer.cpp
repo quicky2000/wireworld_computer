@@ -30,6 +30,7 @@
 
 #include <iomanip>
 #include <iostream>
+#include <fstream>
 #include <sstream>
 #ifndef WIN32
 #include <unistd.h>
@@ -41,7 +42,8 @@ using namespace std;
 namespace wireworld_computer
 {
   //----------------------------------------------------------------------------
-  wireworld_computer::wireworld_computer(const wireworld_computer_utils::t_register_informations & p_informations, bool p_detailled_display)
+  wireworld_computer::wireworld_computer(const wireworld_computer_utils::t_register_informations & p_informations,
+					 const std::string & p_output_file,bool p_detailled_display)
   {
 
     //Creating registers
@@ -87,31 +89,43 @@ namespace wireworld_computer
 	m_registers[l_register_id]->write(l_register_iter.second.get_initial_value());
       }
 
-    // Pretty print of software
+    // Pretty print of software and generation of computer configuration
+    ofstream l_output_file;
+    if("" != p_output_file)
+      {
+	l_output_file.open(p_output_file.c_str());
+	if(!l_output_file.is_open())
+	  {
+	    throw quicky_exception::quicky_logic_exception("Unable to create file \""+p_output_file+"\"",__LINE__,__FILE__);
+	  }
+      }
     std::string l_empty_label = l_max_label_size ?  std::string(4 + l_max_label_size, ' ') : "";
     for(unsigned int l_index=0 ; l_index < 64 ; ++l_index)
       {
-	std::cout << setfill(' ') << setw(2) << l_index << " : ";
+	std::stringstream l_line_stream;
+	l_line_stream << setfill(' ') << setw(2) << l_index << " : ";
 	wireworld_computer_utils::t_register_informations::const_iterator l_info_iter = p_informations.find(l_index);
+	unsigned int l_initial_value = 0;
 	if(p_informations.end() != l_info_iter)
 	  {
+	    l_initial_value = l_info_iter->second.get_initial_value();
 	    if("" != l_info_iter->second.get_label())
 	      {
-		std::cout << "<" << l_info_iter->second.get_label() << ">";
+		l_line_stream << "<" << l_info_iter->second.get_label() << ">";
 		if(l_info_iter->second.get_label().size() < l_max_label_size)
 		  {
-		    std::cout << std::string(l_max_label_size - l_info_iter->second.get_label().size(),' ');
+		    l_line_stream << std::string(l_max_label_size - l_info_iter->second.get_label().size(),' ');
 		  }
-		std::cout << ": ";
+		l_line_stream << ": ";
 	      }
 	    else
 	      {
-		std::cout << l_empty_label;
+		l_line_stream << l_empty_label;
 	      }
 	    std::stringstream l_stream;
 	    if(l_info_iter->second.is_instruction())
 	      {
-		uint16_t l_destination = decodeDestination(l_info_iter->second.get_initial_value());
+		uint16_t l_destination = decodeDestination(l_initial_value);
 		std::stringstream l_dest_stream;
 		l_dest_stream << l_destination;
 		std::string l_dest_str = l_dest_stream.str();
@@ -119,40 +133,55 @@ namespace wireworld_computer
 		  {
 		    l_dest_str += ' ';
 		  }
-		uint16_t l_source = decodeSource(l_info_iter->second.get_initial_value());
+		uint16_t l_source = decodeSource(l_initial_value);
 		l_stream << "MOV R" << l_dest_str << ", R" << l_source;
 	      }
 	    else
 	      {
-		l_stream << "0x" << setfill('0') << setw(4) << hex << l_info_iter->second.get_initial_value() << dec;
+		l_stream << "0x" << setfill('0') << setw(4) << hex << l_initial_value << dec;
 	      }
 	    std::string l_content = l_stream.str();
-	    std::cout << l_content;
+	    l_line_stream << l_content;
 	    if("" != l_info_iter->second.get_comment())
 	      {
 		if(l_content.size() < 12)
 		  {
-		    std::cout << std::string(12 - l_content.size(),' ');
+		    l_line_stream << std::string(12 - l_content.size(),' ');
 		  }
-		std::cout << " ; " << l_info_iter->second.get_comment();
+		l_line_stream << " ; " << l_info_iter->second.get_comment();
 	      }
 	  }
 	else
 	  {
 	    if(l_max_label_size)
 	      {
-		std::cout << l_empty_label;
+		l_line_stream << l_empty_label;
 	      }
 	    if((l_index >= 1 && l_index <= 52) || 60 == l_index || 63 == l_index)
 	      {
-		std::cout << "0x" << setfill('0') << setw(4) << hex << m_registers[l_index]->read() << dec;
+		l_line_stream << "0x" << setfill('0') << setw(4) << hex << m_registers[l_index]->read() << dec;
 	      }
 	    else
 	      {
-		std::cout << "SPECIAL REG";
+		l_line_stream << "SPECIAL REG";
 	      }
 	  }
-	std::cout << std::endl ;
+	if(l_output_file.is_open())
+	  {
+	    l_output_file << "# Register " << l_line_stream.str() << std::endl ;
+	    for(unsigned int l_bit_index = 0 ; l_bit_index < 16 ; ++l_bit_index)
+	      {
+		l_output_file << "R" << l_index << "[" << l_bit_index << "]:" << (l_initial_value & 0x1) << std::endl ;
+		l_initial_value = l_initial_value >> 1;
+	      }
+		l_output_file << std::endl;
+	  }
+	std::cout << l_line_stream.str() << std::endl ;
+      }
+    if(l_output_file.is_open())
+      {
+	l_output_file << "#EOF" << std::endl;
+	l_output_file.close();
       }
   }
 

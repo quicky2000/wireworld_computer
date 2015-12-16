@@ -32,8 +32,10 @@ int main(int argc,char **argv)
       parameter_manager::parameter_manager l_param_manager("wireworld.exe","--",1);
       parameter_manager::parameter_if l_param_file("program_file");
       parameter_manager::parameter_if l_param_detailled_display("detailled_display",true);
+      parameter_manager::parameter_if l_output_file("output_file",true);
       l_param_manager.add(l_param_file);
       l_param_manager.add(l_param_detailled_display);
+      l_param_manager.add(l_output_file);
 
       // Treating parameters
       l_param_manager.treat_parameters(argc,argv);
@@ -57,7 +59,7 @@ int main(int argc,char **argv)
           }
       }
 
-      wireworld_computer::wireworld_computer l_computer(l_register_informations,l_detailled_display);
+      wireworld_computer::wireworld_computer l_computer(l_register_informations,l_output_file.get_value<std::string>(),l_detailled_display);
       l_computer.run();
     }
   catch(quicky_exception::quicky_logic_exception & e)
