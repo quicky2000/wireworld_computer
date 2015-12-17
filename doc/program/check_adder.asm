@@ -16,17 +16,16 @@
 ; R63      | Returns program counter value            | Causes branch to given target
 ;----------------------------------------------------------------------------------------
  0 :       UNUSED
- 1 :       MOV R60, R41 ; Compute negative value of upper limit
- 2 :       MOV R61, R42 ; current variable as second operand of adder
- 3 :       MOV R60, R61 ; negative upper limite as first operand of adder
- 4 :       MOV R61, R43 ; negative upper limite as first operand of adder
- 5 :       MOV R56, R61 ; perform addition
- 6 :       MOV R0 , R61 ; Prepare branch if limit non reached
- 7 :       MOV R63, R44 ; Prepare branch if limit reached
- 8 :       MOV R7 , R7  ; Branch on addition result
- 8 :       0x0000
- 9 :       0x0000
-10 :       0x0000
+ 1 :       MOV R60, R40 ;
+ 2 :       MOV R61, R43 ;
+ 3 :       MOV R0 , R61 ;
+ 4 :       MOV R60, R41 ; Prepare computation of negative value
+ 5 :       MOV R61, R42 ; to set the carry to one and have
+ 6 :       MOV R60, R61 ; the correct zero value
+ 7 :       MOV R61, R43 ;
+ 8 :       MOV R0 , R61 ;
+ 9 :       MOV R63, R47 ; Prepare infinite loop
+10 :       MOV R1 , R1  ; NOP
 11 :       0x0000
 12 :       0x0000
 13 :       0x0000
@@ -56,10 +55,10 @@
 37 :       0x0000
 38 :       0x0000
 39 :       0x0000
-40 :       0x0000
+40 :       0xfffc       ; -3
 41 :       0xfffe       ; -1
 42 :       0xfffd       ; -2
-43 :       0x0003       ; Branch value to restart the loop
+43 :       0x0003       ; 3
 44 :       0x0007       ; Branch value to end the loop
 45 :       0x0001       ; Increment value
 46 :       0xffff       ; Final value
