@@ -43,7 +43,10 @@ namespace wireworld_computer
 {
   //----------------------------------------------------------------------------
   wireworld_computer::wireworld_computer(const wireworld_computer_utils::t_register_informations & p_informations,
-					 const std::string & p_output_file,bool p_detailled_display)
+					 const std::string & p_output_file,
+					 bool p_detailled_display,
+					 const uint32_t & p_instruction_delay):
+    m_instruction_delay(p_instruction_delay)
   {
 
     //Creating registers
@@ -233,7 +236,7 @@ namespace wireworld_computer
 	uint16_t l_new_instr = getInstruction();
 	execInstruction(l_instr);
 	l_instr = l_new_instr;
-	sleep(1);
+	usleep(m_instruction_delay);
 	++l_nb_cycle;
       }
     cout << "Run finished" << endl ;

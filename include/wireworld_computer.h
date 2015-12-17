@@ -29,7 +29,8 @@ namespace wireworld_computer
   public:
     wireworld_computer(const wireworld_computer_utils::t_register_informations & p_informations,
 		       const std::string & p_output_file,
-		       bool p_detailled_display);
+		       bool p_detailled_display,
+		       const uint32_t & p_instruction_delay);
     void run(void);
   private:
     uint8_t decodeDestination(uint16_t p_instr);
@@ -37,6 +38,7 @@ namespace wireworld_computer
     uint16_t getInstruction(void);
     void execInstruction(uint16_t p_instr);
     register_if* m_registers[64];
+    uint32_t m_instruction_delay;
   };
 
 }
