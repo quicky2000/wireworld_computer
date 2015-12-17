@@ -215,7 +215,11 @@ namespace wireworld_computer
 		  }
 		if(!l_unused || "" != l_label || "" != l_comment )
 		  {
-		    p_register_informations.insert(wireworld_computer_utils::t_register_informations::value_type(l_register_id,register_information(l_instruction,l_value,l_comment,l_label)));
+		    bool l_new = p_register_informations.insert(wireworld_computer_utils::t_register_informations::value_type(l_register_id,register_information(l_instruction,l_value,l_comment,l_label))).second;
+		    if(!l_new)
+		      {
+			parser_error("Register "+l_register_id_str+" already defined",l_nb_line,__LINE__,__FILE__);
+		      }
 		  }
 	      }
           }
